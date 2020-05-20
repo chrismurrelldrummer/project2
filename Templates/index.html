@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 
+{% block script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector("#hello").onclick = hello;
+    });
+</script>
+{% endblock %}
+
 {% block title %}
 Home
 {% endblock %}
 
 {% block body %}
 <h1>This is my home page!</h1>
+
+<button id="hello">Say Hello</button>
+
 {% endblock %}

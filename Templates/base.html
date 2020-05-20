@@ -19,10 +19,16 @@
     </script>
 
     <!-- local CSS & SASS -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="altstyle.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/altstyle.css">
+
+    <!-- local external javascript file -->
+    <script src="/static/scripts.js"></script>
+
+    {% block script %}{% endblock %}
 
     <title>{% block title %}{% endblock %}</title>
+
 </head>
 
 <body>
