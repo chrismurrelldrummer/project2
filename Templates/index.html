@@ -1,11 +1,7 @@
 {% extends 'base.html' %}
 
 {% block script %}
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelector("#hello").onclick = hello;
-    });
-</script>
+<script src="{{ url_for('static', filename='index.js') }}"></script>
 {% endblock %}
 
 {% block title %}
@@ -13,8 +9,38 @@ Home
 {% endblock %}
 
 {% block body %}
-<h1>This is my home page!</h1>
 
-<button id="hello">Say Hello</button>
+
+<h1 class="text-center mt-5">This is my home page!</h1>
+
+{% if error == 'y' %}
+<div class="alert alert-danger" role="alert">
+    <strong>{{ err }}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+<!-- show online users -->
+<div>
+    <h4>Online:</h4>
+
+    <ul id="users">
+    </ul>
+
+</div>
+
+<div id="register" class="form-group mt-5">
+    <label for="#username">Please enter a display name. <i>Note: This name will be permanent once submitted.</i></label>
+
+    <div class="input-group mb-3">
+        <input id="username" type="text" placeholder="Enter a display name" class="form-control">
+    </div>
+    <div class="input-group-append">
+        <button id="confirm" class="btn btn-success">Confirm</button>
+    </div>
+
+</div>
 
 {% endblock %}
