@@ -1,2 +1,5 @@
 .vscode
 .venv
+config.txt
+/__pycache__
+altstyle.css.map
