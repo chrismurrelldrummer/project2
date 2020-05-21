@@ -1,11 +1,24 @@
 {% extends 'base.html' %}
 
 {% block script %}
-<script src="{{ url_for('static', filename='channels.js') }}"></script>
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
+
+<script id="postMsg" type="text/x-handlebars-template">
+
+    {% raw -%}
+    <div class="card w-75 ml-auto mt-2 mb-2">
+        <div class="card-body">
+            {{ msg }}
+            <p class="text-muted text-right mb-0">{{ user }}</p>
+        </div>
+    </div>
+    {%- endraw %}
+
+</script>
 {% endblock %}
 
 {% block title %}
-{{ channel }} - Chat
+Chat - {{ channel }}
 {% endblock %}
 
 {% block body %}
@@ -19,25 +32,25 @@
 </div>
 {% endif %}
 
-<div class="card">
-    <div class="card-body">
+<div class="card" id="chatBox">
+    <div class="card-header">
+        {{ channel }}
+    </div>
+    <div class="card-body" id="msgBox">
 
-        <div class="card-header">
-            {{ channel }}
-        </div>
-
-        <div class="card">
+        <div class="card w-75 ml-auto mt-2 mb-2">
             <div class="card-body">
-
-                Message text goes here!
-
+                This is my static test message!
+                <p class="text-muted text-right mb-0">Chris</p>
             </div>
         </div>
 
-        <div class="card-footer">
-            Add submit form here
+    </div>
+    <div class="card-footer">
+        <div class="input-group-append form-group">
+            <textarea name="txtBox" id="txtBox" rows="3" class="form-control"></textarea>
+            <button class="btn btn-success" type="submit" id="send" name="send">Send</button>
         </div>
-
     </div>
 </div>
 

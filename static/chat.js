@@ -1,16 +1,44 @@
-// socket.on('sendMsg', function (data) {
+// Connect to websocket
+var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-//     if (localStorage['user'] == data['user']) {
+document.addEventListener("DOMContentLoaded", function () {
 
-//         const msg = document.createElement('li');
-//         li.innerHTML = `${Object.keys(data)}`;
-//         document.querySelector('#users').append(li);
-//     } else {
+    // set button function
+    document.querySelector('#send').onclick = function () {
 
-//         const li = document.createElement('li');
-//         li.innerHTML = `${Object.keys(data)}`;
-//         document.querySelector('#users').append(li);
-//     }
-        
+        const msg = document.querySelector('#txtBox').value;
+        const user = localStorage.getItem('user');
 
-// });
+        socket.emit('sendMsg', {
+
+            'msg': msg,
+            'user': user
+        });
+    };
+
+    socket.on('sendMsg', function (data) {
+
+        add(data);
+        clearBox();
+
+    });
+});
+
+function add(data) {
+
+    // Create msg template
+    const template = Handlebars.compile(document.querySelector('#postMsg').innerHTML);
+
+    // Add msg to DOM.
+    const content = template({
+        'msg': data.msg,
+        'user': data.user
+    });
+
+    document.querySelector('#msgBox').innerHTML += content;
+};
+
+function clearBox() {
+
+    document.querySelector('#txtBox').value = '';
+};

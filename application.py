@@ -29,11 +29,6 @@ def create():
         details = [channel, descrip, cs, 1]
         
         chList.append(details)
-
-        print(chList)
-
-        for row in chList:
-            print(row)
     
     return redirect('/channels')
 
@@ -50,6 +45,12 @@ def chat(ch):
 def disconnect():
 
     print('User is now offline')
+
+
+@socketio.on('sendMsg')
+def send(data):
+
+    emit("sendMsg", data, broadcast=True)
 
 
 @socketio.on("offline")
