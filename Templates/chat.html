@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='channels.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+{{ channel }} - Chat
+{% endblock %}
+
+{% block body %}
+
+{% if error == 'y' %}
+<div class="alert alert-danger" role="alert">
+    <strong>{{ err }}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="card-header">
+            {{ channel }}
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+
+                Message text goes here!
+
+            </div>
+        </div>
+
+        <div class="card-footer">
+            Add submit form here
+        </div>
+
+    </div>
+</div>
+
+
+
+{% endblock %}

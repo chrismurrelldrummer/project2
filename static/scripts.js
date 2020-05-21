@@ -1,9 +1,15 @@
-function hello() {
-    const txt = document.querySelector('h1').innerHTML;
+document.addEventListener("DOMContentLoaded", function () {
+    // Connect to websocket
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-    if (txt === 'This is my home page!') {
-        document.querySelector('h1').innerHTML = 'Welcome to my website!';
-    } else {
-        document.querySelector('h1').innerHTML = 'This is my home page!';
-    }
-}
+    socket.on('disconnect', function () {
+        const user = localStorage.getItem('user')
+    
+        console.log('user disconnected')
+
+        socket.emit('offline', {
+            'user': user
+        });
+    
+    });
+});

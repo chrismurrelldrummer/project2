@@ -27,8 +27,21 @@ Home
     <h4>Online:</h4>
 
     <ul id="users">
+        {% for row in online %}
+        <li>{{ row }}</li>
+        {% endfor %}
     </ul>
+</div>
 
+<!-- show offline users -->
+<div class="text-muted">
+    <h4>Offline:</h4>
+
+    <ul id="offline">
+        {% for row in offline %}
+        <li>{{ row }}</li>
+        {% endfor %}
+    </ul>
 </div>
 
 <div id="register" class="form-group mt-5">

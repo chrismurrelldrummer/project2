@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='channels.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+Channels
+{% endblock %}
+
+{% block body %}
+
+{% if error == 'y' %}
+<div class="alert alert-danger" role="alert">
+    <strong>{{ err }}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+<h4 class="mt-5 mb-4">Available Channels:</h4>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            {% for row in chList %}
+            <div class="col-md-3">
+                <form action="{{ url_for('chat', ch=row[0]) }}" method="post">
+                    <button class="card btn btn-block btn-light" type="submit" id="cs" data-cs="{{ row[2] }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ row[0] }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Number of People: {{ row[3] }}</h6>
+                            <p class="card-text">{{ row[1] }}</p>
+                        </div>
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card-footer text-center">
+        Page 1 of 1
+    </div>
+</div>
+
+
+
+
+{% endblock %}

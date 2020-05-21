@@ -1,14 +1,12 @@
+// Connect to websocket
+var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
 document.addEventListener("DOMContentLoaded", function () {
-    // Connect to websocket
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
     socket.on('connect', function () {
-        console.log('I\'m online.');
 
         // check if user has registered before
         if (!localStorage.getItem('user')) {
-
-            console.log('1st time visiting this site.');
 
             // set input field to update button data
             document.querySelector('#username').onkeyup = setreg;
@@ -31,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     'status': 'online',
                     'user': user
                 });
-
             };
         } else {
 
@@ -49,15 +46,32 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-    });
 
-    socket.on('online', function (data) {
-        const li = document.createElement('li');
-        li.innerHTML = `${Object.keys(data)}`;
-        document.querySelector('#users').append(li);
     });
 
 });
+
+// socket.on('online', function (data) {
+
+//     let list = document.querySelector("#offline");
+//     list.removeChild(list.childNodes[data]);
+
+//     // if (!localStorage.getItem('user') == Object.keys(data)) {
+//     const li = document.createElement('li');
+//     li.innerHTML = `${Object.keys(data)}`;
+//     document.querySelector('#users').append(li);
+//     // }
+// });
+
+// socket.on('offline', function (data) {
+
+//     let list = document.querySelector("#users");
+//     list.removeChild(list.childNodes[data]);
+
+//     const li = document.createElement('li');
+//     li.innerHTML = `${Object.keys(data)}`;
+//     document.querySelector('#offline').append(li);
+// });
 
 function setreg() {
 
