@@ -27,7 +27,7 @@ Channels
             {% for row in chList %}
             <div class="col-md-3">
                 <form action="{{ url_for('chat', ch=row[0]) }}" method="post">
-                    <button class="card btn btn-block btn-light" type="submit" id="cs" data-cs="{{ row[2] }}">
+                    <button class="card btn btn-block" type="submit" id="cs" data-cs="5px solid {{ row[2] }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ row[0] }}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Number of People: {{ row[3] }}</h6>

@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
 
-    document.querySelectorAll('.btn').forEach(function () {
+    document.querySelectorAll('.btn').forEach(function (button) {
 
-        this.style.background = this.dataset.cs;
+        button.style.border = button.dataset.cs;
     });
 
 });
