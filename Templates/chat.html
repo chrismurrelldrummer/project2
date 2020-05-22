@@ -3,10 +3,25 @@
 {% block script %}
 <script src="{{ url_for('static', filename='chat.js') }}"></script>
 
-<script id="postMsg" type="text/x-handlebars-template">
+<!-- User message template -->
+<script id="postMsg1" type="text/x-handlebars-template">
 
     {% raw -%}
     <div class="card w-75 ml-auto mt-2 mb-2">
+        <div class="card-body pb-1">
+            {{ msg }}
+            <p class="text-muted text-right mb-0"><i>{{ user }}: {{ time }}</i></p>
+        </div>
+    </div>
+    {%- endraw %}
+
+</script>
+
+<!-- Other channel user message template -->
+<script id="postMsg2" type="text/x-handlebars-template">
+
+    {% raw -%}
+    <div class="card w-75 mr-auto mt-2 mb-2">
         <div class="card-body pb-1">
             {{ msg }}
             <p class="text-muted text-right mb-0"><i>{{ user }}: {{ time }}</i></p>
@@ -40,7 +55,7 @@ Chat - {{ channel }}
 
         {% for row in msg %}
         {% if row['room'] == channel %}
-        <div class="card w-75 ml-auto mt-2 mb-2">
+        <div class="card w-75 mr-auto mt-2 mb-2" id="{{ row['user'] }}">
             <div class="card-body pb-1">
                 {{ row['msg'] }}
                 <p class="text-muted text-right mb-0"><i>{{ row['user'] }}: {{ row['time'] }}</i></p>
