@@ -6,3 +6,19 @@
     min-height: 80%;
     max-height: 80%;
 }
+
+h2.error {
+    text-align: center;
+    font-size: 5vw;
+    color: red;
+    font-weight: bold;
+    margin-bottom: 4%;
+}
+
+h1.code {
+    text-align: center;
+    font-size: 7vw;
+    color:black;
+    font-weight: bold;
+    margin-bottom: 4%;
+}

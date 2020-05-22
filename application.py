@@ -15,7 +15,10 @@ messages = []
 
 @app.route("/")
 def index():
-    return render_template('index.html', online=usersonline, offline=usersoffline)
+    return render_template('index.html',
+                           online=usersonline,
+                           offline=usersoffline)
+
 
 @app.route("/create", methods=["GET", "POST"])
 def create():
@@ -33,19 +36,30 @@ def create():
         # if details[channel] in chList:
         #     err = 'There is already a channel with this name. Please chose another.'
         #     return render_template('create.html', error='y', err=err)
-        
+
         chList.append(details)
-    
-    return redirect('/channels')
+
+    return redirect(url_for('channels'))
+
 
 @app.route("/channels")
 def channels():
     return render_template('channels.html', chList=chList)
 
-@app.route("/chat/<string:ch>", methods=["GET","POST"])
-def chat(ch):
-    return render_template('chat.html', channel=ch, msg=messages)
 
+@app.route("/chat/<string:ch>", methods=["GET", "POST"])
+def chat(ch):
+
+    if chList == []:
+        err = 'Sorry! That page does not exist.'
+        return render_template('error.html', err=err, code=404)
+    else:
+        for row in chList:
+            if ch in row:
+                return render_template('chat.html', channel=ch, msg=messages)
+            else:
+                err = 'Sorry! That page does not exist.'
+                return render_template('error.html', err=err, code=404)
 
 @socketio.on('disconnect')
 def disconnect():
@@ -57,7 +71,19 @@ def disconnect():
 def lastroom(data):
 
     channel = data['room']
-    emit('redirect', {'url': url_for('chat', ch=channel)})
+
+    if chList == []:
+        print('Channel NOT Found')
+        emit('redirect', {'url': url_for('channels')})
+    else:
+        for row in chList:
+            print(row)
+            if channel in row:
+                print('Channel Found')
+                emit('redirect', {'url': url_for('chat', ch=channel)})
+            else:
+                print('Channel NOT Found')
+                emit('redirect', {'url': url_for('channels')})
 
 
 @socketio.on('sendMsg')
@@ -67,13 +93,17 @@ def send(data):
     emit("sendMsg", data, broadcast=True)
 
 
+# @socketio.on('newChannel')
+# def newChannel(data):
+
+#     emit("newChannel", data, broadcast=True)
 
 
 @socketio.on("offline")
 def offline(data):
 
     user = data["user"]
-  
+
     usersonline[user] = 'offline'
 
 

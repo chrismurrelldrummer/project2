@@ -2,6 +2,25 @@
 
 {% block script %}
 <script src="{{ url_for('static', filename='channels.js') }}"></script>
+
+<!-- <script id="newCh" type="text/x-handlebars-template">
+
+    {% raw -%}
+    <div class="col-md-3">
+        <form action="{{ url_for('chat', ch=name) }}" method="post">
+            <button class="card btn btn-block mb-3" type="submit" id="cs" data-cs="5px solid {{ cs }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Number of People: 1</h6>
+                    <p class="card-text">{{ descrip }}</p>
+                </div>
+            </button>
+        </form>
+    </div>
+    {%- endraw %}
+
+</script> -->
+
 {% endblock %}
 
 {% block title %}
@@ -23,7 +42,7 @@ Channels
 
 <div class="card">
     <div class="card-body">
-        <div class="row">
+        <div class="row" id="channelList">
             {% for row in chList %}
             <div class="col-md-3">
                 <form action="{{ url_for('chat', ch=row[0]) }}" method="post">
