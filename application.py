@@ -53,25 +53,17 @@ def disconnect():
     print('User is now offline')
 
 
-# @socketio.on('lastroom')
-# def lastroom(data):
+@socketio.on('lastroom')
+def lastroom(data):
 
-#     print(data)
-#     channel = data['room']
-#     print(channel)
-
-#     return redirect(url_for('chat', ch=channel))
-
+    channel = data['room']
+    emit('redirect', {'url': url_for('chat', ch=channel)})
 
 
 @socketio.on('sendMsg')
 def send(data):
 
-    
-
     messages.append(data)
-    print(messages)
-
     emit("sendMsg", data, broadcast=True)
 
 
@@ -84,8 +76,6 @@ def offline(data):
   
     usersonline[user] = 'offline'
 
-    print(usersonline)
-
 
 @socketio.on("status")
 def status(data):
@@ -93,12 +83,6 @@ def status(data):
     status = data["status"]
     user = data["user"]
 
-    if status == 'online':
+    usersonline[user] = status
 
-        usersonline[user] = status
-
-        emit("online", usersonline, broadcast=True)
-
-    else:
-        err = 'There was an issue broadcasting you online status.'
-        return render_template('index.html', error='y', err=err)
+    emit("online", usersonline, broadcast=True)
