@@ -3,16 +3,23 @@ var socket = io.connect(location.protocol + '//' + document.domain + ':' + locat
 
 document.addEventListener("DOMContentLoaded", function () {
 
+    const room = document.querySelector('#channelName').dataset.name;
+
+    localStorage.setItem('room', room)
+
     // set button function
     document.querySelector('#send').onclick = function () {
 
         const msg = document.querySelector('#txtBox').value;
         const user = localStorage.getItem('user');
+        const time = new Date().toLocaleString();
 
         socket.emit('sendMsg', {
 
+            'room': room,
             'msg': msg,
-            'user': user
+            'user': user,
+            'time': time
         });
     };
 
@@ -20,7 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         add(data);
         clearBox();
-
     });
 });
 
@@ -32,7 +38,8 @@ function add(data) {
     // Add msg to DOM.
     const content = template({
         'msg': data.msg,
-        'user': data.user
+        'user': data.user,
+        'time': data.time
     });
 
     document.querySelector('#msgBox').innerHTML += content;

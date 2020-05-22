@@ -33,19 +33,33 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
 
             // display greeting to existing user
-            var user = localStorage.getItem('user')
-            document.querySelector('h1').innerHTML = `Welcome back ${ user }`;
+            // var user = localStorage.getItem('user');
+            // document.querySelector('h1').innerHTML = `Welcome back ${ user }`;
 
-            // disable registration fields
-            document.querySelector('#username').disabled = true;
-            document.querySelector('#confirm').disabled = true;
+            // // disable registration fields
+            // document.querySelector('#username').disabled = true;
+            // document.querySelector('#confirm').disabled = true;
+
+            var user = localStorage.getItem('user');
 
             socket.emit('status', {
                 'status': 'online',
                 'user': user
             });
-        }
 
+            // if (localStorage.getItem('room')) {
+
+            //     console.log('redirecting...');
+
+            //     const room = localStorage.getItem('room');
+
+            //     console.log('Last room was ', room);
+
+            //     socket.emit('lastroom', {
+            //         'room': room
+            //     });
+            // };
+        }
 
     });
 

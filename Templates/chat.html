@@ -7,9 +7,9 @@
 
     {% raw -%}
     <div class="card w-75 ml-auto mt-2 mb-2">
-        <div class="card-body">
+        <div class="card-body pb-1">
             {{ msg }}
-            <p class="text-muted text-right mb-0">{{ user }}</p>
+            <p class="text-muted text-right mb-0"><i>{{ user }}: {{ time }}</i></p>
         </div>
     </div>
     {%- endraw %}
@@ -33,17 +33,21 @@ Chat - {{ channel }}
 {% endif %}
 
 <div class="card" id="chatBox">
-    <div class="card-header">
+    <div class="card-header" id="channelName" data-name="{{ channel }}">
         {{ channel }}
     </div>
     <div class="card-body" id="msgBox">
 
+        {% for row in msg %}
+        {% if row['room'] == channel %}
         <div class="card w-75 ml-auto mt-2 mb-2">
-            <div class="card-body">
-                This is my static test message!
-                <p class="text-muted text-right mb-0">Chris</p>
+            <div class="card-body pb-1">
+                {{ row['msg'] }}
+                <p class="text-muted text-right mb-0"><i>{{ row['user'] }}: {{ row['time'] }}</i></p>
             </div>
         </div>
+        {% endif %}
+        {% endfor %}
 
     </div>
     <div class="card-footer">

@@ -10,6 +10,7 @@ socketio = SocketIO(app)
 usersonline = {}
 usersoffline = {}
 chList = []
+messages = []
 
 
 @app.route("/")
@@ -27,6 +28,11 @@ def create():
         descrip = request.form.get('newChDes')
 
         details = [channel, descrip, cs, 1]
+
+        # for chList[][0]???
+        # if details[channel] in chList:
+        #     err = 'There is already a channel with this name. Please chose another.'
+        #     return render_template('create.html', error='y', err=err)
         
         chList.append(details)
     
@@ -36,9 +42,9 @@ def create():
 def channels():
     return render_template('channels.html', chList=chList)
 
-@app.route("/chat/<string:ch>", methods=["POST"])
+@app.route("/chat/<string:ch>", methods=["GET","POST"])
 def chat(ch):
-    return render_template('chat.html', channel=ch)
+    return render_template('chat.html', channel=ch, msg=messages)
 
 
 @socketio.on('disconnect')
@@ -47,10 +53,28 @@ def disconnect():
     print('User is now offline')
 
 
+# @socketio.on('lastroom')
+# def lastroom(data):
+
+#     print(data)
+#     channel = data['room']
+#     print(channel)
+
+#     return redirect(url_for('chat', ch=channel))
+
+
+
 @socketio.on('sendMsg')
 def send(data):
 
+    
+
+    messages.append(data)
+    print(messages)
+
     emit("sendMsg", data, broadcast=True)
+
+
 
 
 @socketio.on("offline")
