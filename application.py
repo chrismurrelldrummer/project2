@@ -95,7 +95,7 @@ def lastroom(data):
 @socketio.on('sendMsg')
 def send(data):
 
-    max = 5
+    maxcount = 5
     count = 0
 
     room = data['room']
@@ -105,15 +105,19 @@ def send(data):
         if room == row['room']:
             count += 1
 
-    if count < max:
+    if count < maxcount:
         messages.append(data)
         emit("sendMsg", data, broadcast=True)
     else:
-        # messages.remove(room)
+
+        for row in messages:
+            if room == row['room']:
+                messages.remove(row)
+                break
+        
         messages.append(data)
-        # print(messages)
         emit("sendMsg", data, broadcast=True)
-        # emit("delMsg", data, broadcast=True)
+        emit("delMsg", data, broadcast=True)
 
 
 # @socketio.on('newChannel')

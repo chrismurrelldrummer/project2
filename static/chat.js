@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // format existing posts
         indent();
     } catch (err) {
+        // edge browser does has error on scroll
         // format existing posts
         indent();
     }
@@ -44,6 +45,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         clearBox(data);
+    });
+
+    socket.on('delMsg', function (data) {
+
+        document.querySelector('div.card.w-75').remove();
     });
 });
 
