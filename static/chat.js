@@ -49,6 +49,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     socket.on('delMsg', function (data) {
 
+        // document.querySelector('div.card.w-75').style.animationPlayState = 'running';
+        // document.querySelector('div.card.w-75').addEventListener('animationend', () =>  {
+        //     document.querySelector('div.card.w-75').remove();
+        // });
+
         document.querySelector('div.card.w-75').remove();
     });
 });
