@@ -32,10 +32,10 @@ def create():
 
         details = [channel, descrip, cs, 1]
 
-        # for chList[][0]???
-        # if details[channel] in chList:
-        #     err = 'There is already a channel with this name. Please chose another.'
-        #     return render_template('create.html', error='y', err=err)
+        for row in chList:
+            if channel in row:
+                err = 'There is already a channel with this name. Please choose another.'
+                return render_template('create.html', error='y', err=err)
 
         chList.append(details)
 
@@ -50,16 +50,29 @@ def channels():
 @app.route("/chat/<string:ch>", methods=["GET", "POST"])
 def chat(ch):
 
-    if chList == []:
-        err = 'Sorry! That page does not exist.'
-        return render_template('error.html', err=err, code=404)
+    # get method for when user types in url
+    if request.method == 'GET':
+
+        if chList == []:
+            err = 'Sorry! That page does not exist.'
+            return render_template('error.html', err=err, code=404)
+        else:
+            for row in chList:
+                if ch in row:
+                    return render_template('chat.html', channel=ch, msg=messages)
+                
+            err = 'Sorry! That page does not exist.'
+            return render_template('error.html', err=err, code=404)
     else:
+        # post method will have chList because it comes from button on channels page
         for row in chList:
+            print(ch)
+            print(row)
             if ch in row:
                 return render_template('chat.html', channel=ch, msg=messages)
-            else:
-                err = 'Sorry! That page does not exist.'
-                return render_template('error.html', err=err, code=404)
+        
+        err = 'Sorry! That page does not exist.'
+        return render_template('error.html', err=err, code=404)
 
 @socketio.on('disconnect')
 def disconnect():
@@ -73,16 +86,12 @@ def lastroom(data):
     channel = data['room']
 
     if chList == []:
-        print('Channel NOT Found')
         emit('redirect', {'url': url_for('channels')})
     else:
         for row in chList:
-            print(row)
             if channel in row:
-                print('Channel Found')
                 emit('redirect', {'url': url_for('chat', ch=channel)})
             else:
-                print('Channel NOT Found')
                 emit('redirect', {'url': url_for('channels')})
 
 
