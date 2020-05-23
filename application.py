@@ -12,7 +12,6 @@ usersoffline = {}
 chList = []
 messages = []
 
-
 @app.route("/")
 def index():
     return render_template('index.html',
@@ -66,8 +65,6 @@ def chat(ch):
     else:
         # post method will have chList because it comes from button on channels page
         for row in chList:
-            print(ch)
-            print(row)
             if ch in row:
                 return render_template('chat.html', channel=ch, msg=messages)
         
@@ -98,8 +95,25 @@ def lastroom(data):
 @socketio.on('sendMsg')
 def send(data):
 
-    messages.append(data)
-    emit("sendMsg", data, broadcast=True)
+    max = 5
+    count = 0
+
+    room = data['room']
+
+    for row in messages:
+
+        if room == row['room']:
+            count += 1
+
+    if count < max:
+        messages.append(data)
+        emit("sendMsg", data, broadcast=True)
+    else:
+        # messages.remove(room)
+        messages.append(data)
+        # print(messages)
+        emit("sendMsg", data, broadcast=True)
+        # emit("delMsg", data, broadcast=True)
 
 
 # @socketio.on('newChannel')

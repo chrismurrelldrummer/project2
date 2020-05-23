@@ -7,8 +7,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     localStorage.setItem('room', room)
 
-    // format existing posts
-    indent();
+    try {
+        // scroll only working on chrome
+        scroll();
+        // format existing posts
+        indent();
+    } catch (err) {
+        // format existing posts
+        indent();
+    }
 
     // set button function
     document.querySelector('#send').onclick = function () {
@@ -29,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     socket.on('sendMsg', function (data) {
 
+        // remember last visited chat page
         const current = localStorage.getItem('room')
 
         if (data['room'] == current) {
@@ -42,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function add(data) {
 
     if (data['user'] == localStorage.getItem('user')) {
-        
+
         // Create msg template
         const template = Handlebars.compile(document.querySelector('#postMsg1').innerHTML);
 
@@ -54,7 +62,7 @@ function add(data) {
         });
 
         document.querySelector('#msgBox').innerHTML += content;
-    
+
     } else {
         // Create msg template
         const template = Handlebars.compile(document.querySelector('#postMsg2').innerHTML);
@@ -74,7 +82,7 @@ function indent() {
 
     const user = localStorage.getItem('user');
 
-    document.querySelectorAll(`#${user}`).forEach(function(div) {
+    document.querySelectorAll(`#${user}`).forEach(function (div) {
 
         div.className = 'card w-75 ml-auto mt-2 mb-2';
     });
@@ -82,7 +90,15 @@ function indent() {
 
 function clearBox(data) {
 
-    if(data['user'] == localStorage.getItem('user')) {
+    if (data['user'] == localStorage.getItem('user')) {
         document.querySelector('#txtBox').value = '';
+        document.querySelector('#txtBox').focus();
     }
 };
+
+function scroll() {
+
+    let box = document.querySelector('#msgBox');
+    let height = box.scrollHeight;
+    box.scrollBy(0, height);
+}
