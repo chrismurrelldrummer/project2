@@ -1,6 +1,8 @@
 import os
 
-from flask import Flask, redirect, render_template, request, url_for
+import requests
+
+from flask import Flask, redirect, render_template, request, url_for, jsonify, json
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
@@ -12,11 +14,32 @@ usersoffline = {}
 chList = []
 messages = []
 
+
 @app.route("/")
 def index():
     return render_template('index.html',
                            online=usersonline,
                            offline=usersoffline)
+
+
+@app.route("/validate", methods=["POST"])
+def validate():
+
+      # Query to PurgoMalum for profanities check
+      txt = request.form.get("txt")
+      res = requests.get("https://www.purgomalum.com/service/json", params={
+          "text": txt})
+
+      # Make sure request succeeded
+      if res.status_code != 200:
+          return jsonify({"success": False})
+
+      # Make sure display name not in blacklist
+      data = res.json()
+      if '*' in data["result"]:
+          return jsonify({"success": False, "txt": data["result"]})
+
+      return jsonify({"success": True, "txt": data["result"]})
 
 
 @app.route("/create", methods=["GET", "POST"])
@@ -58,8 +81,10 @@ def chat(ch):
         else:
             for row in chList:
                 if ch in row:
-                    return render_template('chat.html', channel=ch, msg=messages)
-                
+                    return render_template('chat.html',
+                                           channel=ch,
+                                           msg=messages)
+
             err = 'Sorry! That page does not exist.'
             return render_template('error.html', err=err, code=404)
     else:
@@ -67,9 +92,10 @@ def chat(ch):
         for row in chList:
             if ch in row:
                 return render_template('chat.html', channel=ch, msg=messages)
-        
+
         err = 'Sorry! That page does not exist.'
         return render_template('error.html', err=err, code=404)
+
 
 @socketio.on('disconnect')
 def disconnect():
@@ -95,7 +121,7 @@ def lastroom(data):
 @socketio.on('sendMsg')
 def send(data):
 
-    maxcount = 5
+    maxcount = 100
     count = 0
 
     room = data['room']
@@ -114,7 +140,7 @@ def send(data):
             if room == row['room']:
                 messages.remove(row)
                 break
-        
+
         messages.append(data)
         emit("sendMsg", data, broadcast=True)
         emit("delMsg", data, broadcast=True)

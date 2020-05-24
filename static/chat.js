@@ -18,6 +18,18 @@ document.addEventListener("DOMContentLoaded", function () {
         indent();
     }
 
+    // check for empty input field
+    document.querySelector('#txtBox').onkeyup = function () {
+
+        let txt = document.querySelector('#txtBox').value;
+
+        if (txt == '') {
+            document.querySelector('#send').disabled = true;
+        } else {
+            document.querySelector('#send').disabled = false;
+        }
+    }
+
     // set button function
     document.querySelector('#send').onclick = function () {
 
@@ -49,11 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     socket.on('delMsg', function (data) {
 
-        // document.querySelector('div.card.w-75').style.animationPlayState = 'running';
-        // document.querySelector('div.card.w-75').addEventListener('animationend', () =>  {
-        //     document.querySelector('div.card.w-75').remove();
-        // });
-
         document.querySelector('div.card.w-75').remove();
     });
 });
@@ -61,6 +68,8 @@ document.addEventListener("DOMContentLoaded", function () {
 function add(data) {
 
     if (data['user'] == localStorage.getItem('user')) {
+
+        // profanity(data);
 
         // Create msg template
         const template = Handlebars.compile(document.querySelector('#postMsg1').innerHTML);
@@ -104,6 +113,7 @@ function clearBox(data) {
     if (data['user'] == localStorage.getItem('user')) {
         document.querySelector('#txtBox').value = '';
         document.querySelector('#txtBox').focus();
+        document.querySelector('#send').disabled = true;
     }
 };
 
@@ -113,3 +123,35 @@ function scroll() {
     let height = box.scrollHeight;
     box.scrollBy(0, height);
 }
+
+// function profanity(data) {
+    
+//     // API for profanities ---------------------------------------------------------------
+
+//     // Initialize new request
+//     const request = new XMLHttpRequest();
+//     request.open('POST', '/validate');
+
+//     // Callback function for when request completes
+//     request.onload = () => {
+
+//         // Extract JSON data from request
+//         const apidata = JSON.parse(request.responseText);
+
+//         // Update validated message
+//         if (apidata.txt) {
+            
+//             data['msg'] = apidata.txt;
+//         }
+//     }
+
+//     // Add data to send with request
+//     const apidata = new FormData();
+//     apidata.append('txt', data['msg']);
+
+//     // Send request
+//     request.send(apidata);
+//     return true;
+
+//     // end of API ------------------------------------------------------------------------------
+// }

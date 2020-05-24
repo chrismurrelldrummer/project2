@@ -1,34 +1,14 @@
 .card .w-75 {
     background-color: rgb(138, 43, 226, 0.2);
-    /* animation-name: dlt;
-    animation-duration: 2s;
-    animation-fill-mode: forwards;
-    animation-play-state: paused; */
 }
-
-/* @keyframes dlt {
-    0% {
-        opacity: 1;
-        height: 100%;
-        line-height: 100%;
-    }
-    75% {
-        opacity: 0;
-        height: 100%;
-        line-height: 100%;
-    }
-    100% {
-        opacity: 0;
-        height: 0px;
-        line-height: 0px;
-        padding: 0px;
-        margin-bottom: 0px;
-    }
-} */
 
 #msgBox {
     overflow: auto;
-    height: 75vh;
+    height: 65vh;
+}
+
+#chatBox {
+    margin-bottom: 3%;
 }
 
 h2.error {

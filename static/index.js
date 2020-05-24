@@ -63,6 +63,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+function setreg() {
+
+    let inpt = document.querySelector('#username').value;
+
+    const un = inpt.split(" ").join("")
+    document.querySelector('#confirm').dataset.name = un;
+
+    if (un == '') {
+        const note = '<i>Note: Display names cannot be changed once submitted.</i>';
+        document.querySelector('#err').innerHTML = note;
+        document.querySelector('#valid').className = 'alert alert-warning';
+        document.querySelector('#confirm').disabled = true;
+    } else {
+        
+        document.querySelector('#confirm').disabled = false;
+
+        // API for profanities ---------------------------------------------------------------
+        
+        // Initialize new request
+        const request = new XMLHttpRequest();
+        request.open('POST', '/validate');
+
+        // Callback function for when request completes
+        request.onload = () => {
+
+            // Extract JSON data from request
+            const data = JSON.parse(request.responseText);
+
+            // Update validation message
+            if (data.success) {
+                const valid = 'This display name is valid';
+                document.querySelector('#err').innerHTML = valid;
+                document.querySelector('#valid').className = 'alert alert-success';
+                document.querySelector('#confirm').disabled = false;
+            }
+            else {
+                const invalid = 'Oops! That display name is not allowed.';
+                document.querySelector('#err').innerHTML = invalid;
+                document.querySelector('#valid').className = 'alert alert-danger';
+                document.querySelector('#confirm').disabled = true;
+            }
+        }
+
+        // Add data to send with request
+        const data = new FormData();
+        data.append('txt', un);
+
+        // Send request
+        request.send(data);
+        return false;
+
+        // end of API ------------------------------------------------------------------------------
+    }
+
+}
+
+
 // socket.on('online', function (data) {
 
 //     let list = document.querySelector("#offline");
@@ -84,10 +141,3 @@ document.addEventListener("DOMContentLoaded", function () {
 //     li.innerHTML = `${Object.keys(data)}`;
 //     document.querySelector('#offline').append(li);
 // });
-
-function setreg() {
-
-    let un = document.querySelector('#username').value;
-    document.querySelector('#confirm').dataset.name = un;
-
-}

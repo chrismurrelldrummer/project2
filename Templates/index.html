@@ -22,6 +22,11 @@ Home
 </div>
 {% endif %}
 
+<!-- display name validation -->
+<div id="valid" class="alert alert-warning" role="alert">
+    <strong id="err"><i>Note: Display names cannot be changed once submitted.</i></strong>
+</div>
+
 <!-- show online users -->
 <div>
     <h4>Online:</h4>
@@ -45,13 +50,13 @@ Home
 </div>
 
 <div id="register" class="form-group mt-5">
-    <label for="#username">Please enter a display name. <i>Note: This name will be permanent once submitted.</i></label>
+    <label for="#username">Please enter a display name.</label>
 
     <div class="input-group mb-3">
         <input id="username" type="text" placeholder="Enter a display name" class="form-control">
     </div>
     <div class="input-group-append">
-        <button id="confirm" class="btn btn-success">Confirm</button>
+        <button id="confirm" class="btn btn-success" disabled>Confirm</button>
     </div>
 
 </div>
