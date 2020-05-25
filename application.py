@@ -25,21 +25,21 @@ def index():
 @app.route("/validate", methods=["POST"])
 def validate():
 
-      # Query to PurgoMalum for profanities check
-      txt = request.form.get("txt")
-      res = requests.get("https://www.purgomalum.com/service/json", params={
-          "text": txt})
+    # Query to PurgoMalum for profanities check
+    txt = request.form.get("txt")
+    res = requests.get("https://www.purgomalum.com/service/json",
+                       params={"text": txt})
 
-      # Make sure request succeeded
-      if res.status_code != 200:
-          return jsonify({"success": False})
+    # Make sure request succeeded
+    if res.status_code != 200:
+        return jsonify({"success": False})
 
-      # Make sure display name not in blacklist
-      data = res.json()
-      if '*' in data["result"]:
-          return jsonify({"success": False, "txt": data["result"]})
+    # Make sure display name not in blacklist
+    data = res.json()
+    if '*' in data["result"]:
+        return jsonify({"success": False, "txt": data["result"]})
 
-      return jsonify({"success": True, "txt": data["result"]})
+    return jsonify({"success": True})
 
 
 @app.route("/create", methods=["GET", "POST"])

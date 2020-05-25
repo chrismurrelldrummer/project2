@@ -1,7 +1,7 @@
 // Connect to websocket
 var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
     const room = document.querySelector('#channelName').dataset.name;
 
@@ -13,41 +13,95 @@ document.addEventListener("DOMContentLoaded", function () {
         // format existing posts
         indent();
     } catch (err) {
-        // edge browser does has error on scroll
+        // edge browser has error on scroll
         // format existing posts
         indent();
     }
 
     // check for empty input field
-    document.querySelector('#txtBox').onkeyup = function () {
+    document.querySelector('#txtBox').onkeyup = () => {
 
         let txt = document.querySelector('#txtBox').value;
 
         if (txt == '') {
             document.querySelector('#send').disabled = true;
         } else {
+            // enable send button
             document.querySelector('#send').disabled = false;
         }
     }
 
     // set button function
-    document.querySelector('#send').onclick = function () {
+    document.querySelector('#send').onclick = () => {
 
-        const msg = document.querySelector('#txtBox').value;
+        let msg = document.querySelector('#txtBox').value;
         const user = localStorage.getItem('user');
         const time = new Date().toLocaleString();
 
-        socket.emit('sendMsg', {
+        // check for profanities
+        // profanity(txt);
 
-            'room': room,
-            'msg': msg,
-            'user': user,
-            'time': time
-        });
+        // API for profanities ---------------------------------------------------------------
+
+        // Initialize new request
+        const request = new XMLHttpRequest();
+        request.open('POST', '/validate');
+
+        // Callback function for when request completes
+        request.onload = () => {
+
+            // Extract JSON data from request
+            const apidata = JSON.parse(request.responseText);
+
+            // Update validated message
+            if (!apidata.success) {
+
+                msg = apidata.txt;
+
+                socket.emit('sendMsg', {
+
+                    'room': room,
+                    'msg': msg,
+                    'user': user,
+                    'time': time
+                });
+            } else {
+                socket.emit('sendMsg', {
+
+                    'room': room,
+                    'msg': msg,
+                    'user': user,
+                    'time': time
+                });
+            }
+        }
+
+        // Add data to send with request
+        const apidata = new FormData();
+        apidata.append('txt', msg);
+
+        // Send request
+        request.send(apidata);
+        return false;
+
+        // end of API ------------------------------------------------------------------------------
+
+        // reassigned to msg because profanity changes #txtBox
+        // const msg = document.querySelector('#txtBox').value;
+        // const user = localStorage.getItem('user');
+        // const time = new Date().toLocaleString();
+
+        // socket.emit('sendMsg', {
+
+        //     'room': room,
+        //     'msg': msg,
+        //     'user': user,
+        //     'time': time
+        // });
 
     };
 
-    socket.on('sendMsg', function (data) {
+    socket.on('sendMsg', (data) => {
 
         // remember last visited chat page
         const current = localStorage.getItem('room')
@@ -59,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
         clearBox(data);
     });
 
-    socket.on('delMsg', function (data) {
+    socket.on('delMsg', (data) => {
 
         document.querySelector('div.card.w-75').remove();
     });
@@ -68,8 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
 function add(data) {
 
     if (data['user'] == localStorage.getItem('user')) {
-
-        // profanity(data);
 
         // Create msg template
         const template = Handlebars.compile(document.querySelector('#postMsg1').innerHTML);
@@ -125,7 +177,7 @@ function scroll() {
 }
 
 // function profanity(data) {
-    
+
 //     // API for profanities ---------------------------------------------------------------
 
 //     // Initialize new request
@@ -139,19 +191,20 @@ function scroll() {
 //         const apidata = JSON.parse(request.responseText);
 
 //         // Update validated message
-//         if (apidata.txt) {
-            
-//             data['msg'] = apidata.txt;
+//         if (!apidata.success) {
+
+//             document.querySelector('#txtBox').value = apidata.txt;
 //         }
 //     }
 
 //     // Add data to send with request
 //     const apidata = new FormData();
-//     apidata.append('txt', data['msg']);
+//     apidata.append('txt', data);
+//     console.log(apidata.txt)
 
 //     // Send request
 //     request.send(apidata);
-//     return true;
+//     return false;
 
 //     // end of API ------------------------------------------------------------------------------
 // }
