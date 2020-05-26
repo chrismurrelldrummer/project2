@@ -5,6 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const room = document.querySelector('#channelName').dataset.name;
 
+    // set colour scheme for msgs
+    document.querySelectorAll('#staticMsg').forEach((div) => {
+        div.style.background = div.dataset.cs;
+    });
+
     localStorage.setItem('room', room);
 
     try {
@@ -55,11 +60,28 @@ document.addEventListener("DOMContentLoaded", () => {
         // remember last visited chat page
         const current = localStorage.getItem('room')
 
+        const user = localStorage.getItem('user')
+
         if (data['room'] == current) {
             add(data);
+
+            // set colour scheme for msgs
+            document.querySelectorAll('#msgBod').forEach((div) => {
+                div.dataset.cs = document.querySelector('#staticMsg').dataset.cs;
+                div.style.background = div.dataset.cs;
+            });
         }
 
         clearBox(data);
+
+        if (data['user'] == user) {
+
+            try {
+                scroll();
+            } catch (e) {
+                // error on edge
+            }
+        }
     });
 
     socket.on('delMsg', (data) => {
@@ -151,6 +173,7 @@ function add(data) {
         });
 
         document.querySelector('#msgBox').innerHTML += content;
+
     };
 };
 

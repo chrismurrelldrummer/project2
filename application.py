@@ -103,33 +103,21 @@ def join(data):
         emit('redirect', {'url': url_for('chat', ch=channel)})
 
 
-@app.route("/chat/<string:ch>", methods=["GET", "POST"])
+@app.route("/chat/<string:ch>")
 def chat(ch):
 
-    # get method for when user types in url
-    if request.method == 'GET':
-
-        if chList == []:
-            err = 'Sorry! That page does not exist.'
-            return render_template('error.html', err=err, code=404)
-        else:
-            for row in chList:
-                if ch in row:
-                    return render_template('chat.html',
-                                           channel=ch,
-                                           msg=messages,
-                                           joined=joined)
-
-            err = 'Sorry! That page does not exist.'
-            return render_template('error.html', err=err, code=404)
+    if chList == []:
+        err = 'Sorry! That page does not exist.'
+        return render_template('error.html', err=err, code=404)
     else:
-        # post method will have chList because it comes from button on channels page
         for row in chList:
             if ch in row:
+                cs = row[2]
                 return render_template('chat.html',
                                        channel=ch,
                                        msg=messages,
-                                       joined=joined)
+                                       joined=joined,
+                                       cs=cs)
 
         err = 'Sorry! That page does not exist.'
         return render_template('error.html', err=err, code=404)
