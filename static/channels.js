@@ -1,33 +1,70 @@
 // Connect to websocket
 var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-    document.querySelectorAll('.btn').forEach(function (button) {
+    const user = localStorage.getItem('user');
+    const channels = JSON.parse(localStorage.getItem('channels'));
 
-        button.style.border = button.dataset.cs;
+    document.querySelectorAll('#csbord').forEach((div) => {
+
+        div.style.border = div.dataset.cs;
     });
 
-    // socket.on('newChannel', function (data) {
+    document.querySelectorAll('#access').forEach((button) => {
 
-    //     // Create channel template
-    //     const template = Handlebars.compile(document.querySelector('#newCh').innerHTML);
-        
-    //     console.log(template)
 
-    //     // Add channel to DOM.
-    //     const content = template({
+        if (channels != null) {
 
-    //         'name': data.name,
-    //         'cs': data.cs,
-    //         'descrip': data.descrip,
-    //         'user': data.user
-    //     });
+            let i;
 
-    //     console.log(content)
+            for (i of channels) {
 
-    //     document.querySelector('#channelList').innerHTML += content;
+                if (button.dataset.ch == i) {
+                    button.innerHTML = "Let's Chat";
+                    button.className = 'btn btn-info'
+                }
+            }
+        }
 
-    // });
+        button.onclick = () => {
+
+            if (button.innerHTML == 'Join') {
+
+                let store = [];
+                let local = JSON.parse(localStorage.getItem('channels'));
+
+                if (local == null) {
+                    store.push(button.dataset.ch);
+                    localStorage.setItem('channels', JSON.stringify(store));
+                } else {
+                    local.push(button.dataset.ch);
+                    localStorage.setItem('channels', JSON.stringify(local));
+                }
+
+                socket.emit('join', {
+
+                    'channel': button.dataset.ch,
+                    'user': user,
+                    'status': 'newUser'
+                });
+
+            } else {
+
+                socket.emit('join', {
+
+                    'channel': button.dataset.ch,
+                    'user': user,
+                    'status': 'retUser'
+                });
+
+            }
+        };
+
+    });
+
+    socket.on('redirect', (data) => {
+        window.location = data.url;
+    });
 
 });

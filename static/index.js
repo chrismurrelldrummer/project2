@@ -1,29 +1,40 @@
 // Connect to websocket
 var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-    socket.on('connect', function () {
+    socket.on('connect', () => {
 
         // check if user has registered before
         if (!localStorage.getItem('user')) {
+
+            // disable navigation until signed up
+            document.querySelector('#chanLink').className = 'nav-item nav-link disabled';
+            document.querySelector('#createLink').className = 'nav-item nav-link disabled';
 
             // set input field to update button data
             document.querySelector('#username').onkeyup = setreg;
 
             // set button functions
-            document.querySelector('#confirm').onclick = function () {
+            document.querySelector('#confirm').onclick = () => {
 
                 const user = document.querySelector('#confirm').dataset.name;
 
                 localStorage.setItem('user', user);
 
                 // display greeting to new user
-                document.querySelector('h1').innerHTML = `Hello ${ user }`;
+                document.querySelector('h1').innerHTML = `Hello ${ user }!`;
+                document.querySelector('#greet').hidden = false;
+                document.querySelector('#valid').hidden = true;
 
                 // disable registration fields
+                document.querySelector('#username').value = user;
                 document.querySelector('#username').disabled = true;
                 document.querySelector('#confirm').disabled = true;
+
+                // enable navigation
+                document.querySelector('#chanLink').className = 'nav-item nav-link';
+                document.querySelector('#createLink').className = 'nav-item nav-link';
 
                 socket.emit('status', {
                     'status': 'online',
@@ -32,13 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
             };
         } else {
 
-            // display greeting to existing user
-            var user = localStorage.getItem('user');
-            document.querySelector('h1').innerHTML = `Welcome back ${ user }`;
-
-            // disable registration fields
-            document.querySelector('#username').disabled = true;
-            document.querySelector('#confirm').disabled = true;
+            const user = localStorage.getItem('user')
 
             socket.emit('status', {
                 'status': 'online',
@@ -52,12 +57,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 socket.emit('lastroom', {
                     'room': room
                 });
-            };
+            } else {
 
-            socket.on('redirect', function (data) {
+                const room = '';
+
+                socket.emit('lastroom', {
+                    'room': room
+                });
+            }
+
+            socket.on('redirect', (data) => {
                 window.location = data.url;
             });
-        }
+        };
 
     });
 
@@ -76,11 +88,11 @@ function setreg() {
         document.querySelector('#valid').className = 'alert alert-warning';
         document.querySelector('#confirm').disabled = true;
     } else {
-        
+
         document.querySelector('#confirm').disabled = false;
 
         // API for profanities ---------------------------------------------------------------
-        
+
         // Initialize new request
         const request = new XMLHttpRequest();
         request.open('POST', '/validate');
@@ -97,8 +109,7 @@ function setreg() {
                 document.querySelector('#err').innerHTML = valid;
                 document.querySelector('#valid').className = 'alert alert-success';
                 document.querySelector('#confirm').disabled = false;
-            }
-            else {
+            } else {
                 const invalid = 'Oops! That display name is not allowed.';
                 document.querySelector('#err').innerHTML = invalid;
                 document.querySelector('#valid').className = 'alert alert-danger';
@@ -118,26 +129,3 @@ function setreg() {
     }
 
 }
-
-
-// socket.on('online', function (data) {
-
-//     let list = document.querySelector("#offline");
-//     list.removeChild(list.childNodes[data]);
-
-//     // if (!localStorage.getItem('user') == Object.keys(data)) {
-//     const li = document.createElement('li');
-//     li.innerHTML = `${Object.keys(data)}`;
-//     document.querySelector('#users').append(li);
-//     // }
-// });
-
-// socket.on('offline', function (data) {
-
-//     let list = document.querySelector("#users");
-//     list.removeChild(list.childNodes[data]);
-
-//     const li = document.createElement('li');
-//     li.innerHTML = `${Object.keys(data)}`;
-//     document.querySelector('#offline').append(li);
-// });

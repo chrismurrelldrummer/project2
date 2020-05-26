@@ -47,31 +47,66 @@ Chat - {{ channel }}
 </div>
 {% endif %}
 
-<div class="card" id="chatBox">
-    <div class="card-header" id="channelName" data-name="{{ channel }}">
-        {{ channel }}
-    </div>
-    <div class="card-body" id="msgBox">
+<div class="blur">
 
-        {% for row in msg %}
-        {% if row['room'] == channel %}
-        <div class="card w-75 mr-auto mt-2 mb-2" id="{{ row['user'] }}">
-            <div class="card-body pb-1">
-                {{ row['msg'] }}
-                <p class="text-muted text-right mb-0"><i>{{ row['user'] }}: {{ row['time'] }}</i></p>
+    <!-- modal section -->
+    <div class="modal fade" id="joinMod" tabindex="-1" role="dialog" aria-labelledby="joinMod" aria-hidden="true"
+        data-backdrop="true" data-keyboard="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">{{ channel }}</h5>
+                </div>
+                <div class="modal-body">You haven't joined this group yet. Would you like to join?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Join</button>
+                    <button type="button" class="btn btn-info">Return to Channel List</button>
+                </div>
             </div>
         </div>
-        {% endif %}
-        {% endfor %}
-
     </div>
-    <div class="card-footer">
-        <div class="input-group-append form-group">
-            <textarea name="txtBox" id="txtBox" rows="3" class="form-control" autofocus></textarea>
-            <button class="btn btn-success" type="submit" id="send" name="send" disabled>Send</button>
+    <!-- end modal -->
+
+    <div class="card" id="chatBox">
+        <div class="card-header" id="channelName" data-name="{{ channel }}">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="mb-0">{{ channel }}</h4>
+                </div>
+                <div class="col-md-6 ml-auto text-right">
+                    Toggle send on enter:
+                    <label class="switch">
+                        <input type="checkbox" id="switch">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body" id="msgBox">
+
+            {% for row in msg %}
+            {% if row['room'] == channel %}
+            <div class="card w-75 mr-auto mt-2 mb-2" id="{{ row['user'] }}">
+                <div class="card-body pb-1">
+                    {{ row['msg'] }}
+                    <p class="text-muted text-right mb-0"><i>{{ row['user'] }}: {{ row['time'] }}</i></p>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+        </div>
+        <div class="card-footer">
+            <div class="input-group-append form-group">
+                <textarea name="txtBox" id="txtBox" rows="3" class="form-control" autofocus></textarea>
+                <button class="btn btn-success" type="submit" id="send" name="send" disabled>Send</button>
+            </div>
         </div>
     </div>
+
 </div>
+<!-- end blur -->
 
 
 

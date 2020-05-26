@@ -9,17 +9,18 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
+# initialise global variables
 usersonline = {}
 usersoffline = {}
 chList = []
 messages = []
+joined = {}
+admins = {}
 
 
 @app.route("/")
 def index():
-    return render_template('index.html',
-                           online=usersonline,
-                           offline=usersoffline)
+    return render_template('index.html')
 
 
 @app.route("/validate", methods=["POST"])
@@ -66,7 +67,40 @@ def create():
 
 @app.route("/channels")
 def channels():
-    return render_template('channels.html', chList=chList)
+
+    return render_template('channels.html', chList=chList, joined=joined)
+
+
+@socketio.on("join")
+def join(data):
+
+    channel = data["channel"]
+
+    if data['status'] == 'newUser':
+
+        try:
+            ul = joined[channel]
+            ul.append(data['user'])
+        except:
+            ul = [data['user']]
+
+        joined[channel] = ul
+
+        for row in chList:
+            if channel == row[0]:
+                row[3] += 1
+
+        emit('redirect', {'url': url_for('chat', ch=channel)})
+
+    elif data['status'] == 'admin':
+
+        ul = [data['user']]
+
+        joined[channel] = ul
+        admins[channel] = ul
+
+    else:
+        emit('redirect', {'url': url_for('chat', ch=channel)})
 
 
 @app.route("/chat/<string:ch>", methods=["GET", "POST"])
@@ -83,7 +117,8 @@ def chat(ch):
                 if ch in row:
                     return render_template('chat.html',
                                            channel=ch,
-                                           msg=messages)
+                                           msg=messages,
+                                           joined=joined)
 
             err = 'Sorry! That page does not exist.'
             return render_template('error.html', err=err, code=404)
@@ -91,7 +126,10 @@ def chat(ch):
         # post method will have chList because it comes from button on channels page
         for row in chList:
             if ch in row:
-                return render_template('chat.html', channel=ch, msg=messages)
+                return render_template('chat.html',
+                                       channel=ch,
+                                       msg=messages,
+                                       joined=joined)
 
         err = 'Sorry! That page does not exist.'
         return render_template('error.html', err=err, code=404)

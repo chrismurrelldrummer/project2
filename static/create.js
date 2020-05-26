@@ -1,25 +1,11 @@
-// // set form functions to emit an update
-// document.querySelector('#create').onclick = function () {
-
-//     const channel = document.querySelector('#newChannel').value;
-//     const cs = document.querySelector('#newCS').value;
-//     const descrip = document.querySelector('#newChDes').value;
-//     const user = localStorage.getItem('user');
-
-//     socket.emit('newChannel', {
-//         'name': channel,
-//         'cs': cs,
-//         'descrip': descrip,
-//         'user': user
-//     });
-
-
 // Connect to websocket
 var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
 document.addEventListener("DOMContentLoaded", () => {
 
     socket.on('connect', () => {
+
+        const user = localStorage.getItem('user');
 
         document.querySelector('#newChannel').onkeyup = () => {
 
@@ -69,6 +55,27 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
         }
+
+        document.querySelector('#create').onclick = () => {
+
+            let store = [];
+            let local = JSON.parse(localStorage.getItem('channels'));
+
+            if (local == null) {
+                store.push(document.querySelector('#newChannel').value);
+                localStorage.setItem('channels', JSON.stringify(store));
+            } else {
+                local.push(document.querySelector('#newChannel').value);
+                localStorage.setItem('channels', JSON.stringify(local));
+            }
+
+            socket.emit('join', {
+
+                'channel': document.querySelector('#newChannel').value,
+                'user': user,
+                'status': 'admin'
+            });
+        };
     });
 
 });
@@ -76,10 +83,4 @@ document.addEventListener("DOMContentLoaded", () => {
 function allowed(txt) {
     let allow = /^[a-z0-9\s'#]+$/i;
     return allow.test(txt);
-}
-
-function user() {
-    let user = localStorage.getItem('user');
-
-    return user
 }

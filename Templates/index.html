@@ -11,7 +11,7 @@ Home
 {% block body %}
 
 
-<h1 class="text-center mt-5">This is my home page!</h1>
+<h1 class="text-center mt-5 mb-5">Welcome to Talk-space!</h1>
 
 {% if error == 'y' %}
 <div class="alert alert-danger" role="alert">
@@ -22,38 +22,20 @@ Home
 </div>
 {% endif %}
 
+<div id="greet" class="text-justify mb-5" hidden>
+    <h4>Thank you for signing up to Talk-space! You can now chat to other users by searching for a room in the "channels" tab, or create your own channel using the "create" tab. If you create a channel, you can view and edit its details in the "admin" tab.</h4>
+</div>
+
 <!-- display name validation -->
 <div id="valid" class="alert alert-warning" role="alert">
     <strong id="err"><i>Note: Display names cannot be changed once submitted.</i></strong>
 </div>
 
-<!-- show online users -->
-<div>
-    <h4>Online:</h4>
-
-    <ul id="users">
-        {% for row in online %}
-        <li>{{ row }}</li>
-        {% endfor %}
-    </ul>
-</div>
-
-<!-- show offline users -->
-<div class="text-muted">
-    <h4>Offline:</h4>
-
-    <ul id="offline">
-        {% for row in offline %}
-        <li>{{ row }}</li>
-        {% endfor %}
-    </ul>
-</div>
-
 <div id="register" class="form-group mt-5">
-    <label for="#username">Please enter a display name.</label>
+    <label for="#username">Please set a display name.</label>
 
     <div class="input-group mb-3">
-        <input id="username" type="text" placeholder="Enter a display name" class="form-control">
+        <input id="username" type="text" placeholder="Enter a display name" maxlength="30" class="form-control">
     </div>
     <div class="input-group-append">
         <button id="confirm" class="btn btn-success" disabled>Confirm</button>
