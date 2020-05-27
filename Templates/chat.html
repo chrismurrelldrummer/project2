@@ -10,7 +10,7 @@
     <div class="card w-75 ml-auto mt-2 mb-2">
         <div class="card-body pb-1" id="msgBod" data-cs="">
             {{ msg }}
-            <p class="text-muted text-right mb-0"><i>{{ user }}: {{ time }}</i></p>
+            <p class="muted text-right mb-0"><i>{{ user }}: {{ time }}</i></p>
         </div>
     </div>
     {%- endraw %}
@@ -24,7 +24,7 @@
     <div class="card w-75 mr-auto mt-2 mb-2">
         <div class="card-body pb-1" id="msgBod" data-cs="">
             {{ msg }}
-            <p class="text-muted text-right mb-0"><i>{{ user }}: {{ time }}</i></p>
+            <p class="muted text-right mb-0"><i>{{ user }}: {{ time }}</i></p>
         </div>
     </div>
     {%- endraw %}
@@ -68,9 +68,9 @@ Chat - {{ channel }}
         {% for row in msg %}
         {% if row['room'] == channel %}
         <div class="card w-75 mr-auto mt-2 mb-2" id="{{ row['user'] }}">
-            <div class="card-body pb-1" id="staticMsg" data-cs="{{ cs }}">
+            <div class="card-body pb-1" id="staticMsg" data-csb="{{ csb }}" data-cst="{{ cst }}">
                 {{ row['msg'] }}
-                <p class="text-muted text-right mb-0"><i>{{ row['user'] }}: {{ row['time'] }}</i></p>
+                <p class="muted text-right mb-0"><i>{{ row['user'] }}: {{ row['time'] }}</i></p>
             </div>
         </div>
         {% endif %}

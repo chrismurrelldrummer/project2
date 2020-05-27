@@ -76,6 +76,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 'status': 'admin'
             });
         };
+
+        document.querySelector('#newCSb').onchange = () => {
+            document.querySelector('#preview').style.background = document.querySelector('#newCSb').value;
+        };
+        document.querySelector('#newCSt').onchange = () => {
+            document.querySelector('#preview').style.color = document.querySelector('#newCSt').value;
+            document.querySelector('.muted').style.color = document.querySelector('#newCSt').value;
+        };
+
     });
 
 });

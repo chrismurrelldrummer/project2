@@ -2,6 +2,8 @@ import os
 
 import requests
 
+from datetime import datetime
+
 from flask import Flask, redirect, render_template, request, url_for, jsonify, json
 from flask_socketio import SocketIO, emit
 
@@ -50,10 +52,11 @@ def create():
         return render_template('create.html')
     else:
         channel = request.form.get('newChannel')
-        cs = request.form.get('newCS')
+        csb = request.form.get('newCSb')
+        cst = request.form.get('newCSt')
         descrip = request.form.get('newChDes')
 
-        details = [channel, descrip, cs, 1]
+        details = [channel, descrip, csb, 1, cst]
 
         for row in chList:
             if channel in row:
@@ -61,6 +64,21 @@ def create():
                 return render_template('create.html', error='y', err=err)
 
         chList.append(details)
+
+        # set welcome message from admin
+        welcome = 'Welcome to your new channel! People are now able to join this channel from the "channels" tab. Get your channel off to a good start with a greeting!'
+
+        time = datetime.now()
+        time = time.strftime("%x %X")
+
+        data = {
+            'room': channel,
+            'msg': welcome,
+            'user': 'Talk-space Admin',
+            'time': time
+        }
+
+        messages.append(data)
 
     return redirect(url_for('channels'))
 
@@ -112,12 +130,14 @@ def chat(ch):
     else:
         for row in chList:
             if ch in row:
-                cs = row[2]
+                csb = row[2]
+                cst = row[4]
                 return render_template('chat.html',
                                        channel=ch,
                                        msg=messages,
                                        joined=joined,
-                                       cs=cs)
+                                       csb=csb,
+                                       cst=cst)
 
         err = 'Sorry! That page does not exist.'
         return render_template('error.html', err=err, code=404)

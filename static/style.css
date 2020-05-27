@@ -1,5 +1,14 @@
 .card .w-75 {
-    background-color: rgb(138, 43, 226, 0.2);
+    background-color: #90EE90;
+}
+
+#preview.card-body.pb-1 {
+    color: #000000;
+    background-color: #90EE90;
+}
+
+.muted {
+    opacity: 0.6;
 }
 
 #csbord {

@@ -5,10 +5,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const room = document.querySelector('#channelName').dataset.name;
 
+
     // set colour scheme for msgs
     document.querySelectorAll('#staticMsg').forEach((div) => {
-        div.style.background = div.dataset.cs;
+        div.style.background = div.dataset.csb;
+        div.style.color = div.dataset.cst;
     });
+
 
     localStorage.setItem('room', room);
 
@@ -64,12 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (data['room'] == current) {
             add(data);
-
-            // set colour scheme for msgs
-            document.querySelectorAll('#msgBod').forEach((div) => {
-                div.dataset.cs = document.querySelector('#staticMsg').dataset.cs;
-                div.style.background = div.dataset.cs;
-            });
         }
 
         clearBox(data);
@@ -160,6 +157,7 @@ function add(data) {
         });
 
         document.querySelector('#msgBox').innerHTML += content;
+        CS();
 
     } else {
         // Create msg template
@@ -173,7 +171,7 @@ function add(data) {
         });
 
         document.querySelector('#msgBox').innerHTML += content;
-
+        CS();
     };
 };
 
@@ -201,4 +199,16 @@ function scroll() {
     let box = document.querySelector('#msgBox');
     let height = box.scrollHeight;
     box.scrollBy(0, height);
+}
+
+function CS() {
+
+    // set colour scheme for msgs
+    document.querySelectorAll('#msgBod').forEach((div) => {
+        div.dataset.csb = document.querySelector('#staticMsg').dataset.csb;
+        div.style.background = div.dataset.csb;
+
+        div.dataset.cst = document.querySelector('#staticMsg').dataset.cst;
+        div.style.color = div.dataset.cst;
+    });
 }
