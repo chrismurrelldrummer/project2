@@ -12,8 +12,6 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 # initialise global variables
-usersonline = {}
-usersoffline = {}
 chList = []
 messages = []
 joined = {}
@@ -108,6 +106,7 @@ def join(data):
             if channel == row[0]:
                 row[3] += 1
 
+        emit('joinUser', data, broadcast=True)
         emit('redirect', {'url': url_for('chat', ch=channel)})
 
     elif data['status'] == 'admin':
@@ -115,7 +114,7 @@ def join(data):
         ul = [data['user']]
 
         joined[channel] = ul
-        admins[channel] = ul
+        admins[channel] = data['user']
 
     else:
         emit('redirect', {'url': url_for('chat', ch=channel)})
@@ -132,21 +131,30 @@ def chat(ch):
             if ch in row:
                 csb = row[2]
                 cst = row[4]
+
                 return render_template('chat.html',
                                        channel=ch,
                                        msg=messages,
                                        joined=joined,
                                        csb=csb,
-                                       cst=cst)
+                                       cst=cst,
+                                       admins=admins,
+                                       chList=row)
 
         err = 'Sorry! That page does not exist.'
         return render_template('error.html', err=err, code=404)
 
 
-@socketio.on('disconnect')
-def disconnect():
+@socketio.on("update")
+def update(data):
 
-    print('User is now offline')
+        channel = data['channel']
+        descrip = data['des']
+
+        for row in chList:
+            if channel in row:
+                row[1] = descrip
+                emit('success', broadcast=True)
 
 
 @socketio.on('lastroom')
@@ -190,28 +198,3 @@ def send(data):
         messages.append(data)
         emit("sendMsg", data, broadcast=True)
         emit("delMsg", data, broadcast=True)
-
-
-# @socketio.on('newChannel')
-# def newChannel(data):
-
-#     emit("newChannel", data, broadcast=True)
-
-
-@socketio.on("offline")
-def offline(data):
-
-    user = data["user"]
-
-    usersonline[user] = 'offline'
-
-
-@socketio.on("status")
-def status(data):
-
-    status = data["status"]
-    user = data["user"]
-
-    usersonline[user] = status
-
-    emit("online", usersonline, broadcast=True)

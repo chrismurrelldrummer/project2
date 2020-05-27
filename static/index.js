@@ -36,19 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('#chanLink').className = 'nav-item nav-link';
                 document.querySelector('#createLink').className = 'nav-item nav-link';
 
-                socket.emit('status', {
-                    'status': 'online',
-                    'user': user
-                });
             };
         } else {
 
             const user = localStorage.getItem('user')
-
-            socket.emit('status', {
-                'status': 'online',
-                'user': user
-            });
 
             if (localStorage.getItem('room')) {
 

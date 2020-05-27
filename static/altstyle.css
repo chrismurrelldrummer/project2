@@ -1,1 +1,5 @@
-/* No CSS *//*# sourceMappingURL=altstyle.css.map */
+ul.onlist {
+  list-style-type: none;
+  display: inline;
+}
+/*# sourceMappingURL=altstyle.css.map */

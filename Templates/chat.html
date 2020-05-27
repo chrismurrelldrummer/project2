@@ -30,6 +30,15 @@
     {%- endraw %}
 
 </script>
+
+<!-- user list template -->
+<script id="userList" type="text/x-handlebars-template">
+
+    {% raw -%}
+    <i class="fas fa-user"></i> {{ user }}
+    {%- endraw %}
+
+</script>
 {% endblock %}
 
 {% block title %}
@@ -47,8 +56,39 @@ Chat - {{ channel }}
 </div>
 {% endif %}
 
+<div class="collapse" id="adPan">
+    <div class="card mt-0 mb-2">
+        <div class="card-body">
+
+            <div class="alert alert-success" role="alert" id="success" hidden>
+                Success! Your changes have been saved.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="form-group" id="people">
+                <h5>Users:</h5>
+                {% for row in joined[channel] %}
+                <i class="fas fa-user"></i> {{ row }}
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <h5>Edit channel description:</h5>
+                <textarea class="form-control" id="chDes" maxlength="100">{{ chList[1] }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-success" id="save" type="submit">Save Changes</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div class="card" id="chatBox">
-    <div class="card-header" id="channelName" data-name="{{ channel }}">
+    <div class="card-header" id="channelName" data-name="{{ channel }}" data-admins="{{ admins[channel] }}">
         <div class="row">
             <div class="col-md-6">
                 <h4 class="mb-0">{{ channel }}</h4>

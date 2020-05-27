@@ -4,7 +4,31 @@ var socket = io.connect(location.protocol + '//' + document.domain + ':' + locat
 document.addEventListener("DOMContentLoaded", () => {
 
     const room = document.querySelector('#channelName').dataset.name;
+    const admins = document.querySelector('#channelName').dataset.admins;
+    const user = localStorage.getItem('user');
 
+    // check and set admin privilages
+    if (user == admins) {
+
+        document.querySelector('#toggleAdmin').className = 'nav-item nav-link';
+
+        document.querySelector('#toggleAdmin').onclick = (link) => {
+
+            link.ariaExpanded = true;
+            return false;
+        };
+
+        document.querySelector('#save').onclick = () => {
+
+            const des = document.querySelector('#chDes').value;
+
+            socket.emit('update', {
+
+                'channel': room,
+                'des': des
+            });
+        };
+    }
 
     // set colour scheme for msgs
     document.querySelectorAll('#staticMsg').forEach((div) => {
@@ -84,6 +108,24 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.on('delMsg', (data) => {
 
         document.querySelector('div.card.w-75').remove();
+    });
+
+    socket.on('success', () => {
+
+        document.querySelector('#success').hidden = false;
+    });
+
+    socket.on('joinUser', (data) => {
+
+        // Create template
+        const template = Handlebars.compile(document.querySelector('#userList').innerHTML);
+
+        // Add user to DOM.
+        const item = template({
+            'user': data.user
+        });
+
+        document.querySelector('#people').innerHTML += item;
     });
 });
 
