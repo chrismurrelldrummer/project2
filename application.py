@@ -148,41 +148,42 @@ def chat(ch):
 @socketio.on("update")
 def update(data):
 
-        channel = data['channel']
-        descrip = data['des']
+    channel = data['channel']
+    descrip = data['des']
 
-        for row in chList:
-            if channel in row:
-                row[1] = descrip
-                emit('success', broadcast=True)
+    for row in chList:
+        if channel in row:
+            row[1] = descrip
+            emit('success', broadcast=True)
+
 
 @socketio.on("delete")
 def delete(data):
 
-        channel = data['channel']
+    channel = data['channel']
 
-        for row in chList:
-            if channel in row:
-                chList.remove(row)
+    for row in chList:
+        if channel in row:
+            chList.remove(row)
 
-        array = []
+    array = []
 
-        for row in messages:
-            if channel != row['room']:
-                array.append(row)
-        
-        messages.clear()
+    for row in messages:
+        if channel != row['room']:
+            array.append(row)
 
-        for row in array:
-            messages.append(row)
-        
-        del admins[channel]
-        del joined[channel]
+    messages.clear()
 
-        data['url'] = url_for('channels')
+    for row in array:
+        messages.append(row)
 
-        emit('deleted', data, broadcast=True)
+    del admins[channel]
+    del joined[channel]
 
+    data['url'] = url_for('channels')
+
+    emit('deleted', data, broadcast=True)
+    emit('redirect', data, broadcast=True)
 
 
 @socketio.on('lastroom')

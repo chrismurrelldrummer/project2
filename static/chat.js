@@ -31,13 +31,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.querySelector('#delete').onclick = () => {
 
-            const current = window.location.href;
+            if (confirm("Warning!\nYou are about to delete this channel. This is permanent and will delete all messages sent in the channel.\nDo you still want to proceed?")) {
 
-            socket.emit('delete', {
+                const current = window.location.href;
 
-                'channel': room,
-                'current': current
-            });
+                socket.emit('delete', {
+
+                    'channel': room,
+                    'current': current
+                });
+                
+            } else {
+                document.querySelector('#delete').blur();
+            }
         };
     }
 
@@ -176,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector('#close').onclick = () => {
 
         document.querySelector('#success').hidden = true;
-        
+
         // reset save button
         document.querySelector('#save').disabled = false;
         document.querySelector('#save').onclick = () => {
