@@ -28,6 +28,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 'des': des
             });
         };
+
+        document.querySelector('#delete').onclick = () => {
+
+            const current = window.location.href;
+
+            socket.emit('delete', {
+
+                'channel': room,
+                'current': current
+            });
+        };
     }
 
     // set colour scheme for msgs
@@ -82,6 +93,21 @@ document.addEventListener("DOMContentLoaded", () => {
         setMsg();
     };
 
+    document.querySelectorAll('#delMsg').forEach((button) => {
+
+        button.onclick = () => {
+
+            const time = button.dataset.time;
+
+            socket.emit('remMsg', {
+
+                'channel': room,
+                'user': user,
+                'time': time
+            });
+        }
+    });
+
     socket.on('sendMsg', (data) => {
 
         // remember last visited chat page
@@ -110,9 +136,90 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector('div.card.w-75').remove();
     });
 
+    socket.on('remove', (data) => {
+
+        document.querySelectorAll('div.card.w-75').forEach((div) => {
+
+            const un = div.childNodes[1].children[0].children[0].dataset.user;
+            const t = div.childNodes[1].children[0].children[0].dataset.time;
+
+            if (data.user == un && data.time == t) {
+                div.remove();
+            }
+        });
+
+        // reset button functions
+        document.querySelectorAll('#delMsg').forEach((button) => {
+
+            button.onclick = () => {
+
+                const time = button.dataset.time;
+
+                socket.emit('remMsg', {
+
+                    'channel': room,
+                    'user': user,
+                    'time': time
+                });
+            }
+        });
+    });
+
     socket.on('success', () => {
 
+        // display confirmation to user
         document.querySelector('#success').hidden = false;
+        document.querySelector('#save').disabled = true;
+    });
+
+    // reset button function
+    document.querySelector('#close').onclick = () => {
+
+        document.querySelector('#success').hidden = true;
+        
+        // reset save button
+        document.querySelector('#save').disabled = false;
+        document.querySelector('#save').onclick = () => {
+
+            const des = document.querySelector('#chDes').value;
+
+            socket.emit('update', {
+
+                'channel': room,
+                'des': des
+            });
+        };
+    };
+
+    socket.on('deleted', (data) => {
+
+        let local = JSON.parse(localStorage.getItem('channels'));
+
+        if (local != null) {
+
+            const index = local.indexOf(data.channel);
+            if (index > -1) {
+                local.splice(index, 1);
+            }
+
+            localStorage.setItem('channels', JSON.stringify(local));
+        }
+
+    });
+
+    socket.on('redirect', (data) => {
+        window.location = data.url;
+    });
+
+    socket.on('back', (data) => {
+
+        const current = window.location.href;
+
+        if (data.current == current) {
+
+            window.location = data.url;
+        }
+
     });
 
     socket.on('joinUser', (data) => {
@@ -224,6 +331,7 @@ function indent() {
     document.querySelectorAll(`#${user}`).forEach(function (div) {
 
         div.className = 'card w-75 ml-auto mt-2 mb-2';
+        div.childNodes[1].children[0].hidden = false;
     });
 }
 

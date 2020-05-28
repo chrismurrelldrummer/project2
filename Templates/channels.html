@@ -26,7 +26,7 @@ Channels
     <div class="card-body">
         <div class="row" id="channelList">
             {% for row in chList %}
-            <div class="col-md-3">
+            <div class="col-md-3" id="chanContain" data-ch="{{ row[0] }}">
                 <div class="card" id="csbord" data-cs="5px solid {{ row[2] }}">
                     <div class="card-body" id="chanBod">
                         <h5 class="card-title">{{ row[0] }}</h5>

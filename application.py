@@ -156,6 +156,34 @@ def update(data):
                 row[1] = descrip
                 emit('success', broadcast=True)
 
+@socketio.on("delete")
+def delete(data):
+
+        channel = data['channel']
+
+        for row in chList:
+            if channel in row:
+                chList.remove(row)
+
+        array = []
+
+        for row in messages:
+            if channel != row['room']:
+                array.append(row)
+        
+        messages.clear()
+
+        for row in array:
+            messages.append(row)
+        
+        del admins[channel]
+        del joined[channel]
+
+        data['url'] = url_for('channels')
+
+        emit('deleted', data, broadcast=True)
+
+
 
 @socketio.on('lastroom')
 def lastroom(data):
@@ -198,3 +226,19 @@ def send(data):
         messages.append(data)
         emit("sendMsg", data, broadcast=True)
         emit("delMsg", data, broadcast=True)
+
+
+@socketio.on('remMsg')
+def remMsg(data):
+
+    room = data['channel']
+    user = data['user']
+    time = data['time']
+
+    for row in messages:
+
+        if room == row['room'] and user == row['user'] and time == row['time']:
+            messages.remove(row)
+            break
+
+    emit("remove", data, broadcast=True)

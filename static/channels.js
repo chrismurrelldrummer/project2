@@ -67,4 +67,27 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location = data.url;
     });
 
+    socket.on('deleted', (data) => {
+
+        let local = JSON.parse(localStorage.getItem('channels'));
+
+        if (local != null) {
+
+            const index = local.indexOf(data.channel);
+            if (index > -1) {
+                local.splice(index, 1);
+            }
+
+            localStorage.setItem('channels', JSON.stringify(local));
+        }
+
+        document.querySelectorAll('#chanContain').forEach((div) => {
+
+            if (div.dataset.ch == data.channel) {
+
+                div.remove();
+            }
+        });
+    });
+
 });
