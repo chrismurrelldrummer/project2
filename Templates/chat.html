@@ -112,7 +112,7 @@ Chat - {{ channel }}
         {% for row in msg %}
         {% if row['room'] == channel %}
         <div class="card w-75 mr-auto mt-2 mb-2" id="{{ row['user'] }}">
-            <div class="card-body pb-1" id="staticMsg" data-csb="{{ csb }}" data-cst="{{ cst }}">
+            <div class="card-body pb-1 pt-1" id="staticMsg" data-csb="{{ csb }}" data-cst="{{ cst }}">
                 <p hidden><button type="button" class="close" id="delMsg" data-user="{{ row['user'] }}" data-time="{{ row['time'] }}">
                     <span>&times;</span>
                 </button></p>
