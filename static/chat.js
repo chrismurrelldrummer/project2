@@ -103,8 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         button.onclick = () => {
 
-            console.log('sucess!!')
-
             const time = button.dataset.time;
 
             socket.emit('remMsg', {
@@ -152,10 +150,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const t = div.childNodes[1].children[0].children[0].dataset.time;
 
             if (data.user == un && data.time == t) {
-                console.log('removing...')
                 div.remove();
             }
-            console.log('keep...')
         });
     });
 
@@ -325,8 +321,6 @@ function reset() {
     document.querySelectorAll('#delMsg').forEach((button) => {
 
         button.onclick = () => {
-
-            console.log('clicked...')
 
             const room = document.querySelector('#channelName').dataset.name;
             const user = button.dataset.user;
