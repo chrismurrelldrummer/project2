@@ -241,5 +241,7 @@ def remMsg(data):
         if room == row['room'] and user == row['user'] and time == row['time']:
             messages.remove(row)
             break
+    
+    print('emitted...')
 
     emit("remove", data, broadcast=True)

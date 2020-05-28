@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     'channel': room,
                     'current': current
                 });
-                
+
             } else {
                 document.querySelector('#delete').blur();
             }
@@ -103,6 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         button.onclick = () => {
 
+            console.log('sucess!!')
+
             const time = button.dataset.time;
 
             socket.emit('remMsg', {
@@ -150,24 +152,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const t = div.childNodes[1].children[0].children[0].dataset.time;
 
             if (data.user == un && data.time == t) {
+                console.log('removing...')
                 div.remove();
             }
-        });
-
-        // reset button functions
-        document.querySelectorAll('#delMsg').forEach((button) => {
-
-            button.onclick = () => {
-
-                const time = button.dataset.time;
-
-                socket.emit('remMsg', {
-
-                    'channel': room,
-                    'user': user,
-                    'time': time
-                });
-            }
+            console.log('keep...')
         });
     });
 
@@ -313,6 +301,7 @@ function add(data) {
 
         document.querySelector('#msgBox').innerHTML += content;
         CS();
+        reset();
 
     } else {
         // Create msg template
@@ -327,8 +316,31 @@ function add(data) {
 
         document.querySelector('#msgBox').innerHTML += content;
         CS();
+        reset();
     };
 };
+
+function reset() {
+    // reset button functions
+    document.querySelectorAll('#delMsg').forEach((button) => {
+
+        button.onclick = () => {
+
+            console.log('clicked...')
+
+            const room = document.querySelector('#channelName').dataset.name;
+            const user = button.dataset.user;
+            const time = button.dataset.time;
+
+            socket.emit('remMsg', {
+
+                'channel': room,
+                'user': user,
+                'time': time
+            });
+        }
+    });
+}
 
 function indent() {
 

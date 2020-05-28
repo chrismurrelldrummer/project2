@@ -26,6 +26,9 @@
     {% raw -%}
     <div class="card w-75 mr-auto mt-2 mb-2">
         <div class="card-body pb-1 pt-1" id="msgBod" data-cs="">
+            <p hidden><button type="button" class="close" id="delMsg" data-user={{ user }} data-time={{ time }}>
+                <span>&times;</span>
+            </button></p>
             <p>{{ msg }}</p>
             <p class="muted text-right mb-0"><i>{{ user }}: {{ time }}</i></p>
         </div>
