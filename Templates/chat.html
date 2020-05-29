@@ -7,9 +7,9 @@
 <script id="postMsg1" type="text/x-handlebars-template">
 
     {% raw -%}
-    <div class="card w-75 ml-auto mt-2 mb-2">
+    <div class="card w-75 ml-auto mt-2 mb-2" id="{{ user }}">
         <div class="card-body pb-1 pt-1" id="msgBod" data-cs="">
-            <p><button type="button" class="close" id="delMsg" data-user={{ user }} data-time={{ time }}>
+            <p><button type="button" class="close" id="delMsg" data-user="{{ user }}" data-time="{{ time }}">
                 <span>&times;</span>
             </button></p>
             <p>{{ msg }}</p>
@@ -24,9 +24,9 @@
 <script id="postMsg2" type="text/x-handlebars-template">
 
     {% raw -%}
-    <div class="card w-75 mr-auto mt-2 mb-2">
+    <div class="card w-75 mr-auto mt-2 mb-2" id="{{ user }}">
         <div class="card-body pb-1 pt-1" id="msgBod" data-cs="">
-            <p hidden><button type="button" class="close" id="delMsg" data-user={{ user }} data-time={{ time }}>
+            <p hidden><button type="button" class="close" id="delMsg" data-user="{{ user }}" data-time="{{ time }}">
                 <span>&times;</span>
             </button></p>
             <p>{{ msg }}</p>

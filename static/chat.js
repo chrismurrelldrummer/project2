@@ -126,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         clearBox(data);
+        reset();
 
         if (data['user'] == user) {
 
@@ -144,12 +145,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     socket.on('remove', (data) => {
 
+        const user = data.user;
+        const time = data.time;
+
         document.querySelectorAll('div.card.w-75').forEach((div) => {
 
             const un = div.childNodes[1].children[0].children[0].dataset.user;
             const t = div.childNodes[1].children[0].children[0].dataset.time;
 
-            if (data.user == un && data.time == t) {
+            if (user == un && time == t) {
+
                 div.remove();
             }
         });
@@ -297,7 +302,6 @@ function add(data) {
 
         document.querySelector('#msgBox').innerHTML += content;
         CS();
-        reset();
 
     } else {
         // Create msg template
@@ -312,7 +316,6 @@ function add(data) {
 
         document.querySelector('#msgBox').innerHTML += content;
         CS();
-        reset();
     };
 };
 
@@ -323,7 +326,7 @@ function reset() {
         button.onclick = () => {
 
             const room = document.querySelector('#channelName').dataset.name;
-            const user = button.dataset.user;
+            const user = localStorage.getItem('user');
             const time = button.dataset.time;
 
             socket.emit('remMsg', {
