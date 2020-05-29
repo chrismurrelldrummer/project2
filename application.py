@@ -154,7 +154,7 @@ def update(data):
     for row in chList:
         if channel in row:
             row[1] = descrip
-            emit('success', broadcast=True)
+            emit('success', data, broadcast=True)
 
 
 @socketio.on("delete")

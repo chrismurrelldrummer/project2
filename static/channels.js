@@ -90,4 +90,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    socket.on('success', (data) => {
+
+        document.querySelectorAll('.card-text').forEach((p) => {
+
+            if (p.id == data.channel) {
+
+                // update description
+                p.innerHTML = data.des;
+            }
+        });
+    });
+
 });
